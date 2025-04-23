@@ -1,10 +1,8 @@
 <?php
 require 'db.php';
 
-// Get raw input & decode JSON
 $data = json_decode(file_get_contents("php://input"), true);
 
-// Validation: title must not be empty
 if (!isset($data['title']) || trim($data['title']) === '') {
     http_response_code(400);
     echo json_encode(["error" => "Task title is required"]);

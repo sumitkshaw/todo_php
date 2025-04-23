@@ -1,7 +1,6 @@
 <?php
 require 'db.php';
 
-// Extract task ID from URL (e.g., /tasks/3)
 $uri = explode('/', $_SERVER['REQUEST_URI']);
 $taskId = end($uri);
 

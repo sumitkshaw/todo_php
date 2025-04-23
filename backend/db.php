@@ -2,7 +2,7 @@
 $host = "localhost";
 $db = "todo_app";
 $user = "root";
-$pass = ""; // leave empty if using XAMPP default
+$pass = ""; 
 
 try {
     $pdo = new PDO("mysql:host=$host;dbname=$db", $user, $pass);
