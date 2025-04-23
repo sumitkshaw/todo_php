@@ -2,9 +2,7 @@
 require 'db.php';
 
 try {
-    $stmt = $pdo->query("SELECT * FROM tasks ORDER BY id DESC");
-    $tasks = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
+    $tasks = $pdo->query("SELECT * FROM tasks ORDER BY id DESC")->fetchAll(PDO::FETCH_ASSOC);
     echo json_encode($tasks);
 } catch (PDOException $e) {
     http_response_code(500);

@@ -1,14 +1,10 @@
 <?php
 require 'db.php';
 
-// Extract task ID from URL (e.g., /tasks/3)
-$uri = explode('/', $_SERVER['REQUEST_URI']);
-$taskId = end($uri);
-
-// Get raw input & decode JSON
+$taskId = basename($_SERVER['REQUEST_URI']);
 $data = json_decode(file_get_contents("php://input"), true);
 
-if (!isset($data['title']) && !isset($data['is_completed'])) {
+if (empty($data['title']) && !isset($data['is_completed'])) {
     http_response_code(400);
     echo json_encode(["error" => "Nothing to update"]);
     exit;
@@ -16,9 +12,9 @@ if (!isset($data['title']) && !isset($data['is_completed'])) {
 
 try {
     $fields = [];
-    $params = [];
+    $params = ['id' => $taskId];
 
-    if (isset($data['title'])) {
+    if (!empty($data['title'])) {
         $fields[] = "title = :title";
         $params['title'] = trim($data['title']);
     }
@@ -28,11 +24,8 @@ try {
         $params['is_completed'] = $data['is_completed'] ? 1 : 0;
     }
 
-    $params['id'] = $taskId;
     $query = "UPDATE tasks SET " . implode(', ', $fields) . " WHERE id = :id";
-
-    $stmt = $pdo->prepare($query);
-    $stmt->execute($params);
+    $pdo->prepare($query)->execute($params);
 
     echo json_encode(["message" => "Task updated successfully"]);
 } catch (PDOException $e) {

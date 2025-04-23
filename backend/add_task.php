@@ -2,18 +2,17 @@
 require 'db.php';
 
 $data = json_decode(file_get_contents("php://input"), true);
+$title = trim($data['title'] ?? '');
 
-if (!isset($data['title']) || trim($data['title']) === '') {
+if ($title === '') {
     http_response_code(400);
     echo json_encode(["error" => "Task title is required"]);
     exit;
 }
 
-$title = trim($data['title']);
-
 try {
-    $stmt = $pdo->prepare("INSERT INTO tasks (title) VALUES (:title)");
-    $stmt->execute(['title' => $title]);
+    $pdo->prepare("INSERT INTO tasks (title) VALUES (:title)")
+        ->execute(['title' => $title]);
 
     echo json_encode([
         "message" => "Task added successfully",
